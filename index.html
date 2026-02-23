@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vextro Studio — Software Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0e0e0e;
+    --white: #fafaf8;
+    --gray: #6b6b6b;
+    --light: #f0efeb;
+    --accent: #c8b89a;
+    --border: #e2e0da;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 4rem;
+    background: rgba(250,250,248,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav.scrolled { border-color: var(--border); }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--black);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--black); }
+
+  .nav-cta {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--black);
+    text-decoration: none;
+    border: 1px solid var(--black);
+    padding: 0.55rem 1.4rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: var(--black); color: var(--white); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 0 4rem;
+    padding-top: 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(8rem, 18vw, 22rem);
+    font-weight: 300;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--border);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-left { position: relative; z-index: 1; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block; width: 2rem; height: 1px; background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--gray);
+    line-height: 1.8;
+    max-width: 420px;
+    margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .btn-primary {
+    background: var(--black); color: var(--white);
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 1rem 2.2rem; text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #333; transform: translateY(-2px); }
+
+  .btn-link {
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gray); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: color 0.2s, gap 0.2s;
+  }
+  .btn-link:hover { color: var(--black); gap: 0.8rem; }
+  .btn-link span { font-size: 1rem; }
+
+  .hero-right {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 1.5rem;
+    opacity: 0; animation: fadeIn 1s 1s forwards;
+  }
+
+  .hero-stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    min-width: 200px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--accent);
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 300;
+    line-height: 1; color: var(--black);
+  }
+  .stat-label {
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray); margin-top: 0.3rem;
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 7rem 4rem; }
+
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .section-tag::before {
+    content: ''; display: block;
+    width: 1.5rem; height: 1px; background: var(--accent);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300; line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── SERVICES ── */
+  #services { background: var(--light); }
+
+  .services-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: end; gap: 2rem;
+    margin-bottom: 5rem;
+  }
+  .services-intro {
+    font-size: 1rem; color: var(--gray);
+    line-height: 1.8; font-weight: 300;
+    max-width: 420px;
+  }
+
+  .services-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px;
+  }
+
+  .service-card {
+    background: var(--white);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background 0.3s;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--black);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover { background: var(--black); }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-card:hover .service-num,
+  .service-card:hover .service-name,
+  .service-card:hover .service-desc { color: var(--white); }
+  .service-card:hover .service-icon { color: var(--accent); }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem; color: var(--border);
+    margin-bottom: 2rem; display: block;
+    transition: color 0.3s;
+  }
+  .service-icon {
+    font-size: 2.2rem; margin-bottom: 1.5rem;
+    display: block; color: var(--black);
+    transition: color 0.3s;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 600;
+    margin-bottom: 1rem; line-height: 1.2;
+    transition: color 0.3s;
+  }
+  .service-desc {
+    font-size: 0.85rem; color: var(--gray);
+    line-height: 1.8; font-weight: 300;
+    transition: color 0.3s;
+  }
+
+  /* ── PORTFOLIO ── */
+  #portfolio { background: var(--white); }
+
+  .portfolio-header {
+    display: flex; align-items: flex-end;
+    justify-content: space-between; margin-bottom: 4rem;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 1.5px;
+  }
+
+  .portfolio-item {
+    position: relative; overflow: hidden;
+    background: var(--light);
+    aspect-ratio: 4/3;
+    cursor: pointer;
+  }
+  .portfolio-item.large {
+    grid-column: span 2; aspect-ratio: 16/9;
+  }
+
+  .portfolio-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Placeholder visuals */
+  .p1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+  .p2 { background: linear-gradient(135deg, #f5f5f0 0%, #e8e4dc 100%); }
+  .p3 { background: linear-gradient(135deg, #2d3436 0%, #636e72 100%); }
+  .p4 { background: linear-gradient(135deg, #f9f6f0 0%, #d4c5b0 100%); }
+  .p5 { background: linear-gradient(135deg, #0d0d0d 0%, #333 100%); }
+
+  .portfolio-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; letter-spacing: 0.3em; text-transform: uppercase;
+  }
+  .p1 .portfolio-placeholder, .p3 .portfolio-placeholder, .p5 .portfolio-placeholder { color: rgba(255,255,255,0.2); }
+  .p2 .portfolio-placeholder, .p4 .portfolio-placeholder { color: rgba(0,0,0,0.12); }
+
+  .portfolio-overlay {
+    position: absolute; inset: 0;
+    background: rgba(14,14,14,0.85);
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-item:hover .portfolio-placeholder { transform: scale(1.05); transition: transform 0.6s ease; }
+
+  .portfolio-cat {
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.5rem;
+  }
+  .portfolio-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 300;
+    color: var(--white); line-height: 1.2;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    background: var(--black); color: var(--white);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+
+  #about .section-tag { color: var(--accent); }
+  #about .section-tag::before { background: var(--accent); }
+
+  #about .section-title { color: var(--white); }
+
+  .about-text {
+    font-size: 1rem; color: rgba(255,255,255,0.55);
+    line-height: 1.9; font-weight: 300;
+    margin-top: 1.5rem;
+  }
+
+  .about-right { display: flex; flex-direction: column; gap: 2rem; }
+
+  .about-feature {
+    padding: 2rem 2.5rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .about-feature:hover { border-color: var(--accent); }
+  .about-feature-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+  .about-feature-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 600;
+    color: var(--white); margin-bottom: 0.5rem;
+  }
+  .about-feature-desc {
+    font-size: 0.85rem; color: rgba(255,255,255,0.45);
+    line-height: 1.7; font-weight: 300;
+  }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--white); }
+
+  .contact-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: start;
+  }
+
+  .contact-info { display: flex; flex-direction: column; gap: 2rem; padding-top: 1rem; }
+
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding-bottom: 2rem; border-bottom: 1px solid var(--border);
+  }
+  .contact-detail:last-child { border-bottom: none; }
+  .contact-detail-icon { font-size: 1.2rem; margin-top: 0.1rem; }
+  .contact-detail-label {
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 0.3rem;
+  }
+  .contact-detail-val {
+    font-size: 0.95rem; color: var(--black);
+    font-weight: 400;
+  }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-group label {
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 300;
+    color: var(--black); background: transparent;
+    border: none; border-bottom: 1px solid var(--border);
+    padding: 0.8rem 0;
+    outline: none; transition: border-color 0.2s;
+    resize: none; appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--black); }
+  .form-group textarea { min-height: 100px; }
+
+  .btn-submit {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--white); background: var(--black);
+    border: none; cursor: pointer;
+    padding: 1.1rem 2.5rem;
+    align-self: flex-start;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-submit:hover { background: #333; transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--black); color: rgba(255,255,255,0.35);
+    padding: 3rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.78rem; font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 600;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    color: rgba(255,255,255,0.35); text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--white); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    nav { padding: 1.5rem 2rem; }
+    #hero, section { padding: 6rem 2rem; }
+    #hero { grid-template-columns: 1fr; gap: 3rem; min-height: auto; padding-top: 8rem; }
+    .hero-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    .services-header { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .portfolio-item.large { grid-column: span 2; }
+    #about { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 2rem; }
+    .contact-wrap { grid-template-columns: 1fr; gap: 3rem; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero, section { padding: 5rem 1.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-item.large { grid-column: span 1; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { padding: 2rem 1.5rem; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">Vextro<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Start a Project</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg-text">Studio</div>
+
+  <div class="hero-left">
+    <div class="hero-tag">Software Agency · Est. 2020</div>
+    <h1 class="hero-title">
+      We craft<br><em>digital</em><br>experiences.
+    </h1>
+    <p class="hero-sub">
+      From mobile apps to beautiful websites — we turn your vision into polished, high-performance digital products that stand out.
+    </p>
+    <div class="hero-actions">
+      <a href="#portfolio" class="btn-primary">View Our Work</a>
+      <a href="#contact" class="btn-link">Let's Talk <span>→</span></a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-stat-card">
+      <div class="stat-num">80+</div>
+      <div class="stat-label">Projects Delivered</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Core Services</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-num">98%</div>
+      <div class="stat-label">Client Satisfaction</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="services-header reveal">
+    <div>
+      <div class="section-tag">What We Do</div>
+      <h2 class="section-title">Our Services</h2>
+    </div>
+    <p class="services-intro">
+      We offer end-to-end digital solutions built with precision, creativity, and a deep commitment to quality — tailored for startups and enterprises alike.
+    </p>
+  </div>
+
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <span class="service-num">01</span>
+      <span class="service-icon">📱</span>
+      <div class="service-name">Mobile App Development</div>
+      <p class="service-desc">Native & cross-platform apps for iOS and Android. Smooth UX, robust backend, seamless performance across all devices.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-num">02</span>
+      <span class="service-icon">🌐</span>
+      <div class="service-name">Website Development</div>
+      <p class="service-desc">Custom web applications and landing pages engineered for speed, scalability, and conversions that matter.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-num">03</span>
+      <span class="service-icon">🎨</span>
+      <div class="service-name">UI/UX Design</div>
+      <p class="service-desc">Human-centered design that balances aesthetics with usability. From wireframes to pixel-perfect interfaces your users will love.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-num">04</span>
+      <span class="service-icon">⚡</span>
+      <div class="service-name">WordPress Development</div>
+      <p class="service-desc">Custom WordPress themes, plugins, and headless setups. Fast, secure, and easy to manage — no technical skills needed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PORTFOLIO ── -->
+<section id="portfolio">
+  <div class="portfolio-header reveal">
+    <div>
+      <div class="section-tag">Selected Work</div>
+      <h2 class="section-title">Our Portfolio</h2>
+    </div>
+    <a href="#contact" class="btn-link">Start Your Project <span>→</span></a>
+  </div>
+
+  <div class="portfolio-grid reveal">
+    <div class="portfolio-item large p1">
+      <div class="portfolio-placeholder">Fintech App</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Mobile App · iOS & Android</div>
+        <div class="portfolio-name">Vaultra Finance Dashboard</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item p2">
+      <div class="portfolio-placeholder">E-Commerce</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Website Development</div>
+        <div class="portfolio-name">Maison Luxe Store</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item p3">
+      <div class="portfolio-placeholder">SaaS</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">UI/UX Design</div>
+        <div class="portfolio-name">Orbit Analytics Platform</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item p4">
+      <div class="portfolio-placeholder">Blog</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">WordPress Development</div>
+        <div class="portfolio-name">The Daily Brief</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item large p5">
+      <div class="portfolio-placeholder">Healthcare</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Mobile App · UI/UX</div>
+        <div class="portfolio-name">Medify Patient Portal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="about-left reveal">
+    <div class="section-tag">Who We Are</div>
+    <h2 class="section-title">Passionate craftspeople, not just developers.</h2>
+    <p class="about-text">
+      Vextro Studio is a team of 12 designers and engineers who believe that great software is equal parts logic and craft. We partner with ambitious brands to build products that are not only functional — but memorable.
+    </p>
+    <p class="about-text" style="margin-top:1rem;">
+      We take on fewer projects at a time so we can give each one our full attention, our best thinking, and our highest standards of execution.
+    </p>
+  </div>
+
+  <div class="about-right reveal">
+    <div class="about-feature">
+      <div class="about-feature-icon">🎯</div>
+      <div class="about-feature-name">Strategic Approach</div>
+      <p class="about-feature-desc">We start with goals and work backward to solutions — ensuring every pixel and line of code serves a purpose.</p>
+    </div>
+    <div class="about-feature">
+      <div class="about-feature-icon">🚀</div>
+      <div class="about-feature-name">Fast Delivery</div>
+      <p class="about-feature-desc">Our agile workflow keeps projects on schedule without cutting corners on quality or attention to detail.</p>
+    </div>
+    <div class="about-feature">
+      <div class="about-feature-icon">🔒</div>
+      <div class="about-feature-name">Long-term Partnership</div>
+      <p class="about-feature-desc">We don't disappear after launch. Our retainer packages keep your product evolving and performing at its best.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="reveal">
+      <div class="section-tag">Get In Touch</div>
+      <h2 class="section-title">Let's build something great together.</h2>
+      <div class="contact-info" style="margin-top:2.5rem;">
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉️</div>
+          <div>
+            <div class="contact-detail-label">Email</div>
+            <div class="contact-detail-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d05080101022d0308150c1e1918090402430e02">[email&#160;protected]</a></div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📞</div>
+          <div>
+            <div class="contact-detail-label">Phone</div>
+            <div class="contact-detail-val">+1 (555) 234-5678</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div>
+            <div class="contact-detail-label">Location</div>
+            <div class="contact-detail-val">San Francisco, CA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="John">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Smith">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="john@company.com">
+      </div>
+      <div class="form-group">
+        <label>Service Interested In</label>
+        <select>
+          <option value="">Select a service…</option>
+          <option>Mobile App Development</option>
+          <option>Website Development</option>
+          <option>UI/UX Design</option>
+          <option>WordPress Development</option>
+          <option>Multiple Services</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tell Us About Your Project</label>
+        <textarea placeholder="Describe your project, goals, timeline…"></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">Vextro<span>.</span></div>
+  <div>© 2025 Vextro Studio. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 100);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textConten
